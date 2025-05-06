@@ -2,26 +2,15 @@ body {
     margin: 0;
     padding: 0;
     background-color: #cbb299; /* beige de fondo */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     font-family: Arial, sans-serif;
-}
-
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
 }
 
 .login-card {
     background-color: #8a5232; /* marrón */
     padding: 40px 30px;
     border-radius: 10px;
-    text-align: center;
-    width: 250px;
+    width: 100%;
+    max-width: 350px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
@@ -30,11 +19,11 @@ body {
     height: 80px;
     background-color: #dcdcdc;
     border-radius: 50%;
-    margin: 0 auto 30px;
-    overflow: hidden;
+    margin: 0 auto 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .avatar img {
@@ -43,37 +32,8 @@ body {
     object-fit: cover;
 }
 
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
 label {
+    font-weight: bold;
     color: white;
-    font-size: 14px;
-    text-align: left;
     margin-bottom: 5px;
-}
-
-input[type="email"],
-input[type="password"] {
-    padding: 8px;
-    margin-bottom: 20px;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-button {
-    background-color: #1e4c3b; /* verde oscuro */
-    color: white;
-    padding: 8px 0;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #16382b;
 }
