@@ -32,6 +32,11 @@ body {
     object-fit: cover;
 }
 
+.btn_login {
+   background-color: #1B4B43;
+    color: white;
+}
+
 label {
     font-weight: bold;
     color: white;
