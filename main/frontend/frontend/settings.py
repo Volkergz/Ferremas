@@ -121,3 +121,19 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Redirecciones de login/logout
+
+
+# Define la URL a la que se redirige al usuario si intenta acceder a una vista que requiere autenticación
+# y no ha iniciado sesión. En este caso, el nombre de la vista es 'login'.
+LOGIN_URL = 'login'
+
+# Define la URL a la que se redirige al usuario después de iniciar sesión exitosamente.
+# En este caso, se redirige a la vista 'home'.
+LOGIN_REDIRECT_URL = 'home'
+
+# Define la URL a la que se redirige al usuario después de cerrar sesión.
+# En este caso, se redirige a la vista 'login'.
+LOGOUT_REDIRECT_URL = 'login'
