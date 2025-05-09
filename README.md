@@ -36,7 +36,7 @@ Primero, abre una terminal o cmd (windows).
 * Clone el repositorio del proyecto desde GitHub.
 
 ```bash
-git clone https://github.com/Volkergz/Ferremas/tree/master
+git clone https://github.com/Volkergz/Ferremas/tree/main
 ```
 
 *  Accede al directorio del proyecto clonado
@@ -50,14 +50,35 @@ cd Ferremas
 pip -m venv venv
 ```
 
-* Activar ambiente virtual en cmd
-.\venv\Scripts\activate
+* Crear ambiente virtual en cmd
+```bash
+python -m venv venv
+```
 
-* Iniciar servidor en ambiente virtual
-py main\frontend\manage.py runserver
+* Activar ambiente virtual en cmd
+```bash
+.\venv\Scripts\activate
+```
+Nota: si esta usando otra terminal, consulte la documentacion de [VirtualEnviroment](https://docs.python.org/3/library/venv.html#how-venvs-work)
+
+## 💻 Ejecución
+
+### Servicio de Cliente
+
+Si ya activo el ambiente virtual, ejecute el siguiente comando
+
+* Correr el servidor
+py frontend\manage.py runserver
+
+### Servicio de Autenticación
+
+* Correr el servidor
+py services\Autenticacion\manage.py runserver
 
 
 #### El servidor se ejecutará en http://127.0.0.1:8000/. Abre esta URL en tu navegador para ver el proyecto en acción.
+
+
 
 
 ## 👀 Team Members
