@@ -7,8 +7,8 @@ from django.contrib import messages
 
 def index(request):
     # Si el usuario no está autenticado, redirige a la página de login
-    if not request.user.is_authenticated:
-        return redirect('login')
+    # if not request.user.is_authenticated:
+    #    return redirect('login')
     return render(request, 'home.html')
 
 # Vista de registro de usuario
@@ -42,6 +42,9 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+def catalogo_view(request):
+    return render(request, 'Catalogo.html')
     
 
 
