@@ -14,6 +14,15 @@ Asegúrate de tener instalado lo siguiente en tu máquina:
 - [Python](https://www.python.org/) (v3.13.3 o superior)
 - [Git](https://git-scm.com/)
 
+### Revisar versiones
+
+npm --version
+py --version
+py -m pip --version
+
+## si pip django no está instalado en su ambiente virtual usar
+pip install django 
+
 ### Pasos a seguir
 
 Primero, abre una terminal o cmd (windows).
@@ -29,19 +38,20 @@ git clone https://github.com/Volkergz/Ferremas/tree/master
 cd Ferremas
 ```
 
-* Instale las dependecias del proyecto
+* Instalar ambiente virtual 
+py -m venv venv 
+o 
+pip -m venv venv
 
-(Por editar)
+* Activar ambiente virtual en cmd
+.\venv\Scripts\activate
 
-```bash
-npm install
-```
+* Iniciar servidor en ambiente virtual
+py main\frontend\manage.py runserver
 
-* Inicie el servidor de desarrollo
-```bash
-ionic serve
-```
-#### El servidor se ejecutará en http://localhost:8100. Abre esta URL en tu navegador para ver el proyecto en acción.
+
+#### El servidor se ejecutará en http://127.0.0.1:8000/. Abre esta URL en tu navegador para ver el proyecto en acción.
+
 
 ## 👀 Team Members
 
