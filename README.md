@@ -16,12 +16,19 @@ Asegúrate de tener instalado lo siguiente en tu máquina:
 
 ### Revisar versiones
 
+```bash
 npm --version
+```
+```bash
 py --version
+```
+```bash
 py -m pip --version
+```
 
 ## si pip django no está instalado en su ambiente virtual usar
-pip install django 
+```pip install django
+```
 
 ### Pasos a seguir
 
@@ -39,9 +46,9 @@ cd Ferremas
 ```
 
 * Instalar ambiente virtual 
-py -m venv venv 
-o 
+```bash
 pip -m venv venv
+```
 
 * Activar ambiente virtual en cmd
 .\venv\Scripts\activate
@@ -56,4 +63,5 @@ py main\frontend\manage.py runserver
 ## 👀 Team Members
 
 * Haleym Hidalgo
-* Dondup Berrios
+* Angel Perugini
+* Martin Nuñez
