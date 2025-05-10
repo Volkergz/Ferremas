@@ -1,31 +1,50 @@
-.parent {
+.parent{
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
     gap: 8px;
 }
 
-.listadoparent {
+.listado{
+    margin-top: 15px; margin-right: 15px; margin-bottom: 15px;
+    border-radius: 10px;
+    grid-column: span 4 / span 4;
+    grid-row: span 5 / span 5;
+}
+
+.listadoparent{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-rows: repeat(6, 1fr);
     gap: 8px;
 }
 
-.buscador {
+.filtros{
     grid-row: span 5 / span 5;
     background-color: #8D5639ff;
     margin: 15px;
     border-radius: 10px;
 }
 
-.listado {
-    grid-column: span 4 / span 4;
-    grid-row: span 5 / span 5;
-}
 
 .item{
     background-color: darkgray;
-    margin: 15px;
-    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* Tablets (≤ 1024px): 2 columnas */
+@media (max-width: 1024px) {
+    .listadoparent {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Móviles (≤ 600px): 1 columna */
+@media (max-width: 600px) {
+    .listadoparent {
+        grid-template-columns: 1fr;
+    }
 }

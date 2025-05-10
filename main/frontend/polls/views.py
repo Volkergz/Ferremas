@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout  #usa el modelo de autenticación de Django
 from django.contrib.auth.models  import User
 from django.contrib import messages
-
+from django.shortcuts import render
 
 def index(request):
     # Si el usuario no está autenticado, redirige a la página de login
@@ -44,7 +44,8 @@ def logout_view(request):
     return redirect('login')
 
 def catalogo_view(request):
-    return render(request, 'Catalogo.html')
+    numeros = range(24)
+    return render(request, 'Catalogo.html', {'numeros':numeros})
 
 
 

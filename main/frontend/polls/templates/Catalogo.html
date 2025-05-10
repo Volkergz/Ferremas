@@ -13,21 +13,57 @@
   
   <div class="parent">
 
-    <div class="buscador">
+    <div class="filtros">
+      <h2>Filtros</h2>
 
+      <div class="filtro-categoria">
+        <button class="toggle-btn" type="button">Herramientas</button>
+        <div class="filtro-content">
+          <li><input type="radio" name="herramienta"> Martillos</li>
+          <li><input type="radio" name="herramienta"> Sierras</li>
+          <li><input type="radio" name="herramienta"> Hachas</li>
+          <li><input type="radio" name="herramienta"> Taladros</li>
+          <li><input type="radio" name="herramienta"> Palas</li>
+          <li><input type="radio" name="herramienta"> Picos</li>
+          <li><input type="radio" name="herramienta"> Destornillador</li>
+        </div>
+      </div>
 
+      <div class="filtro-precio">
+        <button class="toggle-btn" type="button">Precios</button>
+        <div class="filtro-content">
+          <input type="range" min="0" max="1000000" value="500000" step="10000">
+          <p>$0 - $1.000.000</p>
+        </div>
+      </div>
+
+      <div class="filtro-marca">
+        <button class="toggle-btn" type="button">Marcas</button>
+        <div class="filtro-content">
+          <li><input type="radio" name="marca"> MAKITA</li>
+          <li><input type="radio" name="marca"> ARMOR</li>
+          <li><input type="radio" name="marca"> BESSEY</li>
+          <li><input type="radio" name="marca"> DEWALT</li>
+          <li><input type="radio" name="marca"> GLADIATOR</li>
+          <li><input type="radio" name="marca"> IRIMO</li>
+          <li><input type="radio" name="marca"> JONNESWAY</li>
+        </div>
+      </div>
     </div>
 
     <div class="listado">
-
       <div class="listadoparent">
-        <div class="item justify-content-center"> item 1 </div>
-        <div class="item  justify-content-center"> item 2</div>
-        <div class="item justify-content-center"> item 3</div>
-        <div class="item  justify-content-center"> item 4</div>
+        {% for n in numeros %}
+          <div class="item">
+          <p> Item IMAGEN {{ n }} </p>
+          <p> Item NOMBRE {{ n }} </p>
+          <p> Item DESC {{ n }} </p>
+          <p> Item PRECIO {{ n }} </p>
+          </div>
+        {% endfor %}
       </div>
-
     </div>
+
   </div>
 
 </section>
