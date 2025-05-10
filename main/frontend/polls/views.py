@@ -45,7 +45,8 @@ def logout_view(request):
 
 def catalogo_view(request):
     return render(request, 'Catalogo.html')
-    
+
+
 
 
 
