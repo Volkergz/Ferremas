@@ -132,16 +132,14 @@
   transition: transform 0.2s ease-in-out;
 }
 
-
-
   /* Footer */
 .footer-bg {
-  background-color: #5c3c2f;
+  background-color: #5B2121;
   padding: 2rem 0;
 }
 
 .footer-bottom {
-  background-color: #4a2e24;
+  background-color: #742e2e;
   color: #fff;
   padding: 0.5rem 0;
 }
