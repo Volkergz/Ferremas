@@ -17,17 +17,10 @@ Asegúrate de tener instalado lo siguiente en tu máquina:
 ### Revisar versiones
 
 ```bash
-npm --version
-```
-```bash
 py --version
 ```
 ```bash
 py -m pip --version
-```
-
-## si pip django no está instalado en su ambiente virtual usar
-```pip install django
 ```
 
 ### Pasos a seguir
@@ -45,7 +38,7 @@ git clone https://github.com/Volkergz/Ferremas/tree/main
 cd Ferremas
 ```
 
-* Instalar ambiente virtual 
+* Instalar "Virtual Enviroment" 
 ```bash
 pip -m venv venv
 ```
@@ -68,18 +61,27 @@ Nota: si esta usando otra terminal, consulte la documentacion de [VirtualEnvirom
 Si ya activo el ambiente virtual, ejecute el siguiente comando
 
 * Correr el servidor
+```bash
 py frontend\manage.py runserver
+```
 
 ### Servicio de Autenticación
 
 * Correr el servidor
-py services\Autenticacion\manage.py runserver
+```bash
+py services\Autenticacion\main.py
+```
+#### El servicio se ejecutará en http://127.0.0.1:5000/.
+Nota: Para probar los EndPoints use [Postman](https://www.postman.com/)
 
+### Servicio de Transbank
 
-#### El servidor se ejecutará en http://127.0.0.1:8000/. Abre esta URL en tu navegador para ver el proyecto en acción.
-
-
-
+* Correr el servidor
+```bash
+py services\Transbank\main.py
+```
+#### El servicio se ejecutará en http://127.0.0.1:5001/.
+Nota: Para probar los EndPoints use [Postman](https://www.postman.com/)
 
 ## 👀 Team Members
 
