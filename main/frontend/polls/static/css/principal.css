@@ -9,6 +9,14 @@
   background-color: #CAB19B;
 }
 
+/* botones opciones */
+.ferrem-btn1{
+  background-color: #5B2121;
+  margin: 10px;
+  padding: 5px 15px 5px 15px;
+  border-radius: 5px;
+}
+
 /* Navbar */
 .navbar {
   background-color: #5B2121 !important;

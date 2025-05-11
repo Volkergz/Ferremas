@@ -22,8 +22,14 @@
 .filtros{
     grid-row: span 5 / span 5;
     background-color: #8D5639ff;
-    margin: 15px;
+    margin: 15px;    
     border-radius: 10px;
+    padding: 20px;
+    max-height: 40vw;
+}
+
+.opciones{
+    padding-left: 15px;
 }
 
 
@@ -47,4 +53,61 @@
     .listadoparent {
         grid-template-columns: 1fr;
     }
+}
+
+
+/* botones */
+
+.toggle-btn {
+    width: 100%;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    padding: 0;
+    color: #000;
+}
+
+.toggle-btn::after {
+    padding-left: 10px;
+    content: '▼';
+    float: end;
+    
+}
+
+.toggle-btn.active::after {
+    display: none;
+}
+
+.filtro-content{
+    display: none;
+    margin-top: 10px;
+}
+
+.filtro-content.show {
+  display: block;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 0;
+}
+
+.pagination a,
+.pagination span.current {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: #8D5639;
+  color: white;
+  text-decoration: none;
+}
+
+.pagination span.current {
+  background-color: #4a2d1f;
+  font-weight: bold;
 }

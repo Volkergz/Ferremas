@@ -6,7 +6,7 @@
 {% block content %}
 
 {% load static %}
-
+<link rel="stylesheet" href="{% static 'css/principal.css' %}">
 <link rel="stylesheet" href="{% static 'css/catalogo.css' %}">
 
 <section>   
@@ -14,58 +14,95 @@
   <div class="parent">
 
     <div class="filtros">
+
+      <form method="get" action="/catalogo/">
+
       <h2>Filtros</h2>
 
-      <div class="filtro-categoria">
+      <div>
         <button class="toggle-btn" type="button">Herramientas</button>
         <div class="filtro-content">
-          <li><input type="radio" name="herramienta"> Martillos</li>
-          <li><input type="radio" name="herramienta"> Sierras</li>
-          <li><input type="radio" name="herramienta"> Hachas</li>
-          <li><input type="radio" name="herramienta"> Taladros</li>
-          <li><input type="radio" name="herramienta"> Palas</li>
-          <li><input type="radio" name="herramienta"> Picos</li>
-          <li><input type="radio" name="herramienta"> Destornillador</li>
+            <div class="opciones"><input type="radio" name="herramienta"> Martillos</div>
+            <div class="opciones"><input type="radio" name="herramienta"> Sierras</div>
+            <div class="opciones"><input type="radio" name="herramienta"> Hachas</div>
+            <div class="opciones"><input type="radio" name="herramienta"> Taladros</div>
+            <div class="opciones"><input type="radio" name="herramienta"> Palas</div>
+            <div class="opciones"><input type="radio" name="herramienta"> Picos</div>
+            <div class="opciones"><input type="radio" name="herramienta"> Destornillador</div>
         </div>
       </div>
 
-      <div class="filtro-precio">
+      <div>
         <button class="toggle-btn" type="button">Precios</button>
         <div class="filtro-content">
-          <input type="range" min="0" max="1000000" value="500000" step="10000">
-          <p>$0 - $1.000.000</p>
+          <div class="opciones"><input type="checkbox" name="rango_precio" value="0-40000"> $0 - $40.000</div>
+          <div class="opciones"><input type="checkbox" name="rango_precio" value="40000-100000"> $40.000 - $100.000</div>
+          <div class="opciones"><input type="checkbox" name="rango_precio" value="10000-300000"> $100.000 - $300.000</div>
+          <div class="opciones"><input type="checkbox" name="rango_precio" value="300000-500000"> $300.000 - $500.000</div>
+          <div class="opciones"><input type="checkbox" name="rango_precio" value="500000-9999999"> $500.000 +</div>
         </div>
       </div>
 
-      <div class="filtro-marca">
+      <div>
         <button class="toggle-btn" type="button">Marcas</button>
         <div class="filtro-content">
-          <li><input type="radio" name="marca"> MAKITA</li>
-          <li><input type="radio" name="marca"> ARMOR</li>
-          <li><input type="radio" name="marca"> BESSEY</li>
-          <li><input type="radio" name="marca"> DEWALT</li>
-          <li><input type="radio" name="marca"> GLADIATOR</li>
-          <li><input type="radio" name="marca"> IRIMO</li>
-          <li><input type="radio" name="marca"> JONNESWAY</li>
+            <div class="opciones"><input type="radio" name="marca"> MAKITA</div>
+            <div class="opciones"><input type="radio" name="marca"> ARMOR</div>
+            <div class="opciones"><input type="radio" name="marca"> BESSEY</div>
+            <div class="opciones"><input type="radio" name="marca"> DEWALT</div>
+            <div class="opciones"><input type="radio" name="marca"> GLADIATOR</div>
+            <div class="opciones"><input type="radio" name="marca"> IRIMO</div>
+            <div class="opciones"><input type="radio" name="marca"> JONNESWAY</div>
         </div>
       </div>
+
+      <button class="ferrem-btn1" type="submit">Filtrar</button>
+
+      </form>
+
     </div>
 
     <div class="listado">
       <div class="listadoparent">
-        {% for n in numeros %}
+        {% for item in page_obj %}
           <div class="item">
-          <p> Item IMAGEN {{ n }} </p>
-          <p> Item NOMBRE {{ n }} </p>
-          <p> Item DESC {{ n }} </p>
-          <p> Item PRECIO {{ n }} </p>
+          <p> Item IMAGEN {{ item }} </p>
+          <p> Item NOMBRE {{ item }} </p>
+          <p> Item DESC {{ item }} </p>
+          <p> Item PRECIO {{ item }} </p>
           </div>
         {% endfor %}
       </div>
+      <!-- Paginador -->
+      {% comment %} Preservar filtros {% endcomment %}
+      {% with request.GET.urlencode as query_params %}
+        {% with query_params|cut:'page='|cut:'&' as clean_params %}
+          <div class="pagination">
+            {% if page_obj.has_previous %}
+              <a href="?{{ clean_params }}&page=1">&laquo;</a>
+              <a href="?{{ clean_params }}&page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                <span class="current">{{ num }}</span>
+              {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?{{ clean_params }}&page={{ num }}">{{ num }}</a>
+              {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+              <a href="?{{ clean_params }}&page={{ page_obj.next_page_number }}">Siguiente</a>
+              <a href="?{{ clean_params }}&page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+            {% endif %}
+          </div>
+        {% endwith %}
+      {% endwith %}
+
     </div>
 
   </div>
 
 </section>
-
+<script src="{% static 'js/catalogo.js' %}"></script>
 {% endblock %}

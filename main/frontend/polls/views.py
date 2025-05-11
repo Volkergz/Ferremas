@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout  #usa el modelo de a
 from django.contrib.auth.models  import User
 from django.contrib import messages
 from django.shortcuts import render
+from django.core.paginator import Paginator
 
 def index(request):
     # Si el usuario no está autenticado, redirige a la página de login
@@ -44,8 +45,28 @@ def logout_view(request):
     return redirect('login')
 
 def catalogo_view(request):
-    numeros = range(24)
-    return render(request, 'Catalogo.html', {'numeros':numeros})
+    items = range(200)  # reemplazar con base de datos
+
+    herramienta = request.GET.get('reemplazar')
+    if herramienta:
+        items = items.filter(herramienta__iexact=herramienta)
+
+    precio = request.GET.get('reemplazar')
+    if precio:
+        min_price, max_price = map(int, precio.split('-'))
+        items = items.filter(precio__gte=min_price, precio__lte=max_price)
+
+    marca = request.GET.get('reemplazar')
+    if marca:
+        items = items.filter(marca__iexact=marca)
+
+    paginator = Paginator(items, 24)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'Catalogo.html', {
+        'page_obj': page_obj
+    })
 
 
 
