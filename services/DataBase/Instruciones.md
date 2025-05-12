@@ -9,10 +9,10 @@
 ### 3. Desde el gestor grafico, cree una conexión con el SGBBDD utilizando los datos definidos al momento de la instación.
 
 Por defecto son:
-    IP: 125.0.0.1
-    Port:3306
-    user:root
-    password:
+* IP: 125.0.0.1
+* Port:3306
+* user:root
+* password:
 
 ### 4. Cargue la hoja sql 'script.sql' al gestor grafico.
 
