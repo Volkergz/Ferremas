@@ -44,6 +44,9 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+def producto_view(request):
+    return render(request, 'producto.html')
+
 def catalogo_view(request):
     items = range(200)  # reemplazar con base de datos
 
@@ -67,7 +70,6 @@ def catalogo_view(request):
     return render(request, 'Catalogo.html', {
         'page_obj': page_obj
     })
-
 
 
 

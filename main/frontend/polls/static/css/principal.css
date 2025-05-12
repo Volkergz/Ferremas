@@ -1,9 +1,15 @@
 
 /* Notas, no usar */
 .coloresempresa{
-  color: #CBB09Bff, #A66A50ff, #8D5639ff, #5B2121 ,#4A756Eff,#1B4A42ff;
+  color: #CBB09Bff, #A66A50ff, #8D5639ff, #5B2121 ,#4A756Eff,#1B4A42ff,#9CA1A2;
 }
-
+/* Background color classes */
+.marron { background-color: #5B2121;}
+.cafeO { background-color: #8D5639ff;}
+.cafe { background-color: #8D5639ff;}
+.cafeC { background-color: #CBB09Bff;}
+.gris { background-color: #9CA1A2;}
+.blanco { background-color: #fff9f5;}
 /* Fondo principal */
 .bg-principal {
   background-color: #CAB19B;
