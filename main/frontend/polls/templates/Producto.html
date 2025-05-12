@@ -14,25 +14,47 @@
 
 <section>   
     
-    <div style="display: grid; grid-template-columns: 1fr 1fr;">
-        <div class="d-flex justify-content-center" style="width: 50vw; height: 300px; height: auto;">
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, 1fr);">
+        <div class="d-flex justify-content-center" style="height: 300px; height: auto;  grid-column: span 3 / span 3;">
 
-            <div class="blanco" style="width: 100%; height: 1em; margin: 5% 5% 5% 20%">
-                <p> a </p>
+            <div class="blanco" style="width: 100%; margin: 15px 15px 15px 10vw; border-radius: 30px;">
+                    <img>
             </div>
 
         </div>
 
-        <div class="d-flex justify-content-center" style="width: 50vw; height: auto;">
+        <div class="d-flex justify-content-center" style="grid-column: span 2 / span 2; grid-column-start: 4;">
             
-            <div style="width: 100%;margin: 5% 20% 5% 5%; background-color: rgb(155, 80, 51);">
-        
+            <div class="cafeO" style="width: 100%; margin: 15px 10vw 15px 15px; border-radius: 30px; ">
+                <div style="padding: 30px 10px 50px 10px">
+                    <h5> Titulo de item detalle detalle detgalle </h5>
+                    <h6> Precio COLORVERDE (invaicluido) </h6>
+                    <p> Marca : NOMBRE(COLORVERDE) </p>
+                    <p> Sku </p>
+                    <p> Stock : Estado(COLORVERDE) </p>
+                    <p> cantidad </p>
+                    <p> aqui debe hbaer botones - cantidad + </p>  
+                    <p> aqui debe hbaer boton agregar carrito </p> 
+                </div>
             </div>
             
         </div>
 
-        <div class="d-flex justify-content-center" style="grid-column: span 2 / span 2; min-width: 500px; min-height: 500px; margin: 0% 10% 2% 10%; background-color: red;">
-        
+        <div class="d-flex" style="grid-column: span 5 / span 5; grid-row-start: 2;">
+
+            <div class="cafeO" style="width: 80vw; margin: 0% 10% 2% 10%;  border-radius: 30px; ">
+                <div style="padding: 30px 10px 50px 10px">
+                    <h5> Descripción </h5>
+                    <p> Detalle </p>
+                    <p> Detalle </p>
+                    <p> Detalle </p>
+                    <p> Detalle </p>
+                    <p> Detalle </p>
+                    <p> Detalle </p>
+                    <p> Detalle </p>
+                </div>
+            </div>
+
         </div>
     </div> 
 
