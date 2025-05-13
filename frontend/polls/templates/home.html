@@ -41,7 +41,7 @@
 
   {% if user.is_authenticated %}
   <p class="text-white">¡Hola, {{ user.username }}!</p>
-  <a href="{% url 'logout' %}" class="text-white">Cerrar sesión</a>
+  <a href="" class="text-white">Cerrar sesión</a>
 {% else %}
   <a href="{% url 'login' %}" class="text-white">Iniciar sesión</a>
 {% endif %}

@@ -54,8 +54,9 @@ def login_view(request):
 
             return redirect('home')
 
-
-
-
     # Si el método no es POST, solo muestra el formulario
     return render(request, 'login.html')
+
+
+def home_view(request):
+    return render(request, 'home.html')
