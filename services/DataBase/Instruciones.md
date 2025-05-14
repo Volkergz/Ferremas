@@ -14,6 +14,6 @@ Por defecto son:
 * user:root
 * password:
 
-### 4. Cargue la hoja sql 'script.sql' al gestor grafico.
+### 4. Cargue la hoja sql 'Ferremas.sql' al gestor grafico.
 
 ### 5. Ejecute todos los comandos.
