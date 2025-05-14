@@ -1,7 +1,7 @@
 
 /* Notas, no usar */
 .coloresempresa{
-  color: #CBB09Bff, #A66A50ff, #8D5639ff, #5B2121 ,#4A756Eff,#1B4A42ff,#9CA1A2;
+  color: #CBB09Bff, #A66A50ff, #8D5639ff, #5B2121 ,#4A756Eff,#0d5749,#9CA1A2;
 }
 /* Background color classes */
 .marron { background-color: #5B2121;}
@@ -10,6 +10,14 @@
 .cafeC { background-color: #CBB09Bff;}
 .gris { background-color: #9CA1A2;}
 .blanco { background-color: #fff9f5;}
+/* txt color classes */
+.txtmarron { color: #5B2121;}
+.txtcafeO { color: #8D5639ff;}
+.txtcafe { color: #8D5639ff;}
+.txtcafeC { color: #CBB09Bff;}
+.txtgris { color: #9CA1A2;}
+.txtblanco { color: #fff9f5;}
+.txtverde { color: #44FFBA;}
 /* Fondo principal */
 .bg-principal {
   background-color: #CAB19B;
