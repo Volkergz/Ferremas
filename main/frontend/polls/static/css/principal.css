@@ -118,3 +118,18 @@
   text-decoration: underline;
 }
 
+/* Utilidades */
+
+.fmscenter{
+display: flex;
+justify-content: center;
+text-align: center;
+align-content: center;
+align-items: center; 
+}
+
+.center-img{
+display: flex;
+margin-left: auto;
+margin-right: auto;
+}

@@ -47,6 +47,9 @@ def logout_view(request):
 def producto_view(request):
     return render(request, 'producto.html')
 
+def carrito_view(request):
+    return render(request, 'carrito.html')
+
 def catalogo_view(request):
     items = range(200)  # reemplazar con base de datos
 
