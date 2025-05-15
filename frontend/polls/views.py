@@ -1,8 +1,9 @@
+import requests as req
+import uuid
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.contrib.auth import authenticate, login, logout  #usa el modelo de autenticación de Django
-from django.contrib.auth.models  import User
-from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from django.contrib.auth import login, logout
 
 
 def index(request):
@@ -11,38 +12,51 @@ def index(request):
         return redirect('login')
     return render(request, 'home.html')
 
-# Vista de registro de usuario
-def register_view(request):
-    if request.method == 'POST':
-        username = request.POST['email']
-        password = request.POST['password'] 
-        # Verifica si el usuario ya existe en la base de datos
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "El usuario ya existe")  # Muestra error si existe
-        else:
-            # Crea un nuevo usuario
-            User.objects.create_user(username=username, password=password)
-            messages.success(request, "Usuario registrado exitosamente")
-            return redirect('login')  # Redirige a la página de login tras registrar
-    # Si el método no es POST, solo muestra el formulario
-    return render(request, 'register.html')
-
+@csrf_exempt
 def login_view(request):
+    # Si el usuario ya está autenticado, redirige a la página de inicio
     if request.method == 'POST':
-        username = request.POST['email']
+
+        # Obtiene el nombre de usuario y la contraseña del formulario
+        email = request.POST['email']
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user:
+
+        # Intenta validar las credenciales del usuario
+        response = req.post(
+            'http://localhost:5000/auth',
+            json = {'email': email, 'password': password})
+
+        # Si la respuesta es exitosa, autentica al usuario
+        if response.status_code == 200:
+
+            user_data = response.json()["data"]
+
+            print(user_data)
+
+            # Crea un nuevo usuario temporal (Con un ID temporal unico [email+uuid])
+            temp_id = f"user_{user_data['email']}_{uuid.uuid4().hex[:6]}"
+            user = User.objects.create_user(
+                username=temp_id,
+                email=user_data['email'],
+                password=None
+            )
+
+            user.set_unusable_password()
+            user.is_active = True
+            user.save()
+
+            request.session['user_id'] = user.id
+            #request.session['role'] = user_data['role']
+            #if request.user.role == 'soporte':
+            
+
             login(request, user)
+
             return redirect('home')
-        else:
-            messages.error(request, "Credenciales incorrectas")
+
+    # Si el método no es POST, solo muestra el formulario
     return render(request, 'login.html')
 
-def logout_view(request):
-    logout(request)
-    return redirect('login')
-    
 
-
-
+def home_view(request):
+    return render(request, 'home.html')
