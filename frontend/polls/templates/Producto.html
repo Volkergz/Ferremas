@@ -44,28 +44,30 @@
                         <dt  class="col-sm-9  txtverde fw-bold"> {{ producto.stock }} </dt>
                     </dl>
 
+                    <form action="{% url 'add_to_cart' %}" method="POST" id="formulario">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-center align-items-center mb-3" style="width: fit-content;">
 
-                    <div class="d-flex justify-content-center align-items-center mb-3" style="width: fit-content;">
+                            <!-- Input id del producto -->
+                            <input type="number" id="id_producto" name="id_producto" value="{{ producto.id_producto }}" hidden>
 
-                        <button style="border-radius: 6px 0px 0px 6px; border: 1px solid black" class="btn btn-danger" type="button"
-                        onclick="cambiarCantidad(-1)"> - </button>
+                            <!-- Input Cantidad de Producto -->
+                            <button style="border-radius: 6px 0px 0px 6px; border: 1px solid black" class="btn btn-danger" type="button"
+                            onclick="cambiarCantidad(-1)"> - </button>
 
-                        <input id="cantidad" type="text" class="form-control text-center" value="1" min="0"  pattern=[0-9]
-                        style="width: 60px; border: none; border-radius: 0px;">
+                            <input type="text" id="cantidad" name="cantidad" value="1" min="0"  pattern=[0-9] class="form-control text-center" style="width: 60px; border: none; border-radius: 0px;">
 
-                        <button style="border-radius: 0px 6px 6px 0px; border: 1px solid black" class="btn btn-success" type="button"
-                        onclick="cambiarCantidad(1)"> + </button>
-                       
-                    </div>
+                            <button style="border-radius: 0px 6px 6px 0px; border: 1px solid black" class="btn btn-success" type="button"
+                            onclick="cambiarCantidad(1)"> + </button>
+                        
+                        </div>
 
-                    <div id="mensajeError" class="badge text-bg-danger text-wrap" style="display: none; margin-bottom: 20px;">
-                        <p class="fw-bold txtblanco fs-5"> Valor incorrecto, reintente </p>
-                    </div> 
+                        <div id="mensajeError" class="badge text-bg-danger text-wrap" style="display: none; margin-bottom: 20px;">
+                            <p class="fw-bold txtblanco fs-5"> Valor incorrecto, reintente </p>
+                        </div> 
 
-                    
-
-                    <button onclick="validar()" style="border: 1px solid black" class="btn btn-success"> Añadir al Carrito </button>
-
+                        <button type="submit" onclick="return validar()" style="border: 1px solid black" class="btn btn-success">Añadir al Carrito</button>
+                    </form>
                 </div>
             </div>
         </div>

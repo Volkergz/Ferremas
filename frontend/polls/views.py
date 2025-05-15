@@ -48,8 +48,8 @@ def login_view(request):
             user.is_active = True
             user.save()
 
-            request.session['user_id'] = user.id
-            request.session['role'] = user_data['id_rol']            
+            request.session['user_id'] = user_data['id_usuario']
+            request.session['role'] = user_data['id_rol']     
 
             login(request, user)
 
@@ -119,6 +119,33 @@ def producto_view(request, id):
         })
     
     # Si la respuesta no es exitosa, redirige a la página de catálogo
+    return redirect('catalogo')
+
+def add_to_cart(request):
+    # Verifica si el método de la solicitud es POST
+    if request.method == 'POST':
+
+        # Obtiene los datos desde la solicitud POST
+        data = {
+            'id_producto': int(request.POST.get('id_producto')),
+            'id_usuario': int(request.session.get('user_id')),
+            'cantidad': int(request.POST.get('cantidad'))
+        }
+
+        print(data)
+
+        # Realiza una solicitud POST a la API para agregar el producto al carrito
+        response = req.post('http://localhost:5002/addCar', json=data)
+
+        # Si la respuesta es exitosa, redirige a la página del carrito
+        if response.status_code == 200:
+            return redirect('carrito')
+        
+        # Si la respuesta no es exitosa, redirige a la página de catálogo
+        messages.error(request, "Error al agregar el producto al carrito")
+        return redirect('catalogo')
+
+    # Si no es un método POST, redirige a la página de catálogo
     return redirect('catalogo')
 
 def carrito_view(request):

@@ -15,11 +15,11 @@ con = mysql.connector.connect(
 @app.route('/addCar', methods=['POST'])
 def addCar():
     try:
-        data = request.get_json()
+        req = request.get_json()
         data = {
-            'id_usuario': data['id_usuario'],
-            'id_producto': data['id_producto'],
-            'cantidad': data['cantidad']
+            'id_usuario': req['id_usuario'],
+            'id_producto': req['id_producto'],
+            'cantidad': req['cantidad']
         }
 
         cursor = con.cursor(dictionary=True)
