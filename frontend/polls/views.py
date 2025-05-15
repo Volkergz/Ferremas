@@ -107,7 +107,7 @@ def logout_view(request):
 def producto_view(request, id):
 
     # Realizamos una solicitud GET a la API para obtener los detalles del producto
-    response = req.post(f'http://localhost:5001/productos/{id}')
+    response = req.get(f'http://localhost:5001/productos/{id}')
 
     # Si la respuesta es exitosa, se obtiene el producto
     if response.status_code == 200:

@@ -37,7 +37,7 @@ def getProductos():
     #Si el usuario existe, devolvemos un mensaje de éxito
     return jsonify(result), 200
     
-@app.route('/productos/<int:id>', methods=['POST'])
+@app.route('/productos/<int:id>', methods=['get'])
 def getProducto(id):
 
     # Creamos un cursor para ejecutar la consulta
