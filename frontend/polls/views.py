@@ -104,8 +104,22 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
-def producto_view(request):
-    return render(request, 'producto.html')
+def producto_view(request, id):
+
+    # Realizamos una solicitud GET a la API para obtener los detalles del producto
+    response = req.post(f'http://localhost:5001/productos/{id}')
+
+    # Si la respuesta es exitosa, se obtiene el producto
+    if response.status_code == 200:
+        producto = response.json()
+
+        # Renderiza la plantilla con los detalles del producto
+        return render(request, 'producto.html', {
+            'producto': producto
+        })
+    
+    # Si la respuesta no es exitosa, redirige a la página de catálogo
+    return redirect('catalogo')
 
 def carrito_view(request):
     return render(request, 'carrito.html')

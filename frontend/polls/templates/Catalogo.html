@@ -67,15 +67,19 @@
     <div class="listado">
       <div class="listadoparent">
         {% for item in page_obj %}
-          <div class="item">
-            <img src="{% static item.img %}" alt="{{ item.nombre }}" style="max-width: 100%;">
-            <p> Imagen: {{ item.img }} </p>
-            <p> Nombre: {{ item.nombre }} </p>
-            <p> Marca: {{ item.marca }} </p>
-            <p> Precio: {{ item.precio }} </p>
+          <a href="/producto/{{ item.id_producto }}">
+            <div class="card item">
+            <img src="{% static item.img %}" class="card-img-top" alt=" {{ item.nombre }} ">
+            <div class="card-body">
+              <p class="card-text">{{ item.nombre }}</p>
+              <p class="card-text">{{ item.marca }}</p>
+              <p class="card-text">{{ item.precio }}</p>
+            </div>
           </div>
+          </a>
         {% endfor %}
       </div>
+
       <!-- Paginador -->
       {% comment %} Preservar filtros {% endcomment %}
       {% with request.GET.urlencode as query_params %}

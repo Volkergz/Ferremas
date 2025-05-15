@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>{% block title %} base html {% endblock %}</title>
 
+    <link rel="shortcut icon" href="{% static 'img/icono.png' %}" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
 </head>
@@ -46,15 +47,15 @@
             </button>
             <ul class="center dropdown-menu">
                 {% if user.is_authenticated %}
-                <li> <h5 class="text-center"> {{ user.nombre }} </h5> </li>
-                <li> <a class="text-center dropdown-item" href="#"> Perfil </a> </li>
-                <li> <hr class="dropdown-divider"> </li>
-                <li> <a class="warning text-center dropdown-item" href="{% url 'logout' %}"> Cerrar sesión </a> </li>
-                    {% else %}
-                    <li> <a class="text-center dropdown-item" href="/login"> Iniciar sesión</a> </li>
-                    <li> <hr class="dropdown-divider"> </li>
-                    <li> <a class="text-center dropdown-item" href="/register"> Registrarse </a> </li>
-                    {% endif %}
+                  <li> <h5 class="text-center"> {{ user.nombre }} </h5> </li>
+                  <li> <a class="text-center dropdown-item" href="#"> Perfil </a> </li>
+                  <li> <hr class="dropdown-divider"> </li>
+                  <li> <a class="warning text-center dropdown-item" href="{% url 'logout' %}"> Cerrar sesión </a> </li>
+                {% else %}
+                  <li> <a class="text-center dropdown-item" href="/login"> Iniciar sesión</a> </li>
+                  <li> <hr class="dropdown-divider"> </li>
+                  <li> <a class="text-center dropdown-item" href="/register"> Registrarse </a> </li>
+                {% endif %}
               </ul>
         </div>
         <!-- fin botones -->

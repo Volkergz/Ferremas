@@ -17,7 +17,7 @@
         <div class="d-flex justify-content-center" style="height: 300px; height: auto;  grid-column: span 3 / span 3;">
 
             <div class="blanco" style="width: 100%; margin: 15px 15px 15px 10vw; border-radius: 30px;">
-                    <img src="{% static 'img/cemento.jpg' %}" class="card-img-top p-2 producto-img" alt="Producto 5">
+                    <img src="{% static producto.img %}" class="card-img-top p-2 producto-img" alt="{{ producto.nombre }}">
             </div>
 
         </div>
@@ -27,21 +27,21 @@
             <div class="cafeO" style="width: 100%; margin: 15px 10vw 15px 15px; border-radius: 30px; ">
                 <div style="padding: 30px 10px 50px 10px">
 
-                    <h4 class="txtblanco mb-3"> Titulo-BASEDEDATOS </h4>
+                    <h4 class="txtblanco mb-3">{{ producto.nombre }}</h4>
 
                     <dl class="row mb-3">
                 
                         <dt class="col-sm-2 txtblanco fw-bold">Precio:</dt>
-                        <dd class="col-sm-9 txtverde fw-bold mb-3"> $-BASEDATOS </dd>
+                        <dd class="col-sm-9 txtverde fw-bold mb-3"> ${{ producto.precio }} </dd>
 
                         <dt  class="col-sm-2 txtblanco fw-bold">Marca:</dt >
-                        <dd class="col-sm-9 txtverde fw-bold mb-3"> MARCA-BASEDATOS </dd>
+                        <dd class="col-sm-9 txtverde fw-bold mb-3"> {{ producto.marca }} </dd>
 
                         <dt  class="col-sm-2 txtblanco fw-bold"> SKU: </dt>
                         <dd class="col-sm-9 txtblanco fw-bold mb-3"> 12345BASEDATOS </dd>
 
                         <dt  class="col-sm-2 txtblanco fw-bold"> STOCK: </dt>
-                        <dt  class="col-sm-9  txtverde fw-bold"> [SI/NO] [Cantidad-BASEDATOS] </dt>
+                        <dt  class="col-sm-9  txtverde fw-bold"> {{ producto.stock }} </dt>
                     </dl>
 
 
@@ -74,14 +74,7 @@
 
             <div class="cafeO" style="width: 80vw; margin: 0% 10% 2% 10%;  border-radius: 30px; ">
                 <div style="padding: 30px 10px 50px 10px">
-                    <h5> Descripción </h5>
-                    <p> Detalle </p>
-                    <p> Detalle </p>
-                    <p> Detalle </p>
-                    <p> Detalle </p>
-                    <p> Detalle </p>
-                    <p> Detalle </p>
-                    <p> Detalle </p>
+                    <p>{{ producto.descripcion }}</p>
                 </div>
             </div>
 
