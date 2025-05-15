@@ -26,7 +26,7 @@ def autenticateUser():
     cursor = con.cursor(dictionary=True)
 
     #Creamos la consulta para verificar si el usuario existe
-    stmt = "SELECT * FROM user WHERE email = %s AND password = %s"
+    stmt = "SELECT * FROM usuario WHERE email = %s AND password = %s"
 
     #Ejecutamos la consulta para verificar si el usuario existe
     cursor.execute(stmt, (user['email'], user['password']))
