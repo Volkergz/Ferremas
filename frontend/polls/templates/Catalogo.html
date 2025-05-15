@@ -1,0 +1,111 @@
+
+{% extends 'base.html' %}
+
+{% block title %} vista de catalogo {% endblock %}
+
+{% block content %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/principal.css' %}">
+<link rel="stylesheet" href="{% static 'css/catalogo.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<section>   
+  
+  <div class="parent">
+
+    <div class="filtros">
+
+      <form method="get" action="/catalogo/">
+
+      <h2>Filtros</h2>
+
+      <div>
+        <button class="toggle-btn" type="button">Herramientas</button>
+        <div class="filtro-content">
+            <div class="opciones"><input type="radio" name="herramienta"> Martillos</div>
+            <div class="opciones"><input type="radio" name="herramienta"> Sierras</div>
+            <div class="opciones"><input type="radio" name="herramienta"> Hachas</div>
+            <div class="opciones"><input type="radio" name="herramienta"> Taladros</div>
+            <div class="opciones"><input type="radio" name="herramienta"> Palas</div>
+            <div class="opciones"><input type="radio" name="herramienta"> Picos</div>
+            <div class="opciones"><input type="radio" name="herramienta"> Destornillador</div>
+        </div>
+      </div>
+
+      <div>
+        <button class="toggle-btn" type="button">Precios</button>
+        <div class="filtro-content">
+          <div class="opciones"><input type="checkbox" name="rango_precio" value="0-40000"> $0 - $40.000</div>
+          <div class="opciones"><input type="checkbox" name="rango_precio" value="40000-100000"> $40.000 - $100.000</div>
+          <div class="opciones"><input type="checkbox" name="rango_precio" value="10000-300000"> $100.000 - $300.000</div>
+          <div class="opciones"><input type="checkbox" name="rango_precio" value="300000-500000"> $300.000 - $500.000</div>
+          <div class="opciones"><input type="checkbox" name="rango_precio" value="500000-9999999"> $500.000 +</div>
+        </div>
+      </div>
+
+      <div>
+        <button class="toggle-btn" type="button">Marcas</button>
+        <div class="filtro-content">
+            <div class="opciones"><input type="radio" name="marca"> MAKITA</div>
+            <div class="opciones"><input type="radio" name="marca"> ARMOR</div>
+            <div class="opciones"><input type="radio" name="marca"> BESSEY</div>
+            <div class="opciones"><input type="radio" name="marca"> DEWALT</div>
+            <div class="opciones"><input type="radio" name="marca"> GLADIATOR</div>
+            <div class="opciones"><input type="radio" name="marca"> IRIMO</div>
+            <div class="opciones"><input type="radio" name="marca"> JONNESWAY</div>
+        </div>
+      </div>
+
+      <button class="ferrem-btn1" type="submit">Filtrar</button>
+
+      </form>
+
+    </div>
+
+    <div class="listado">
+      <div class="listadoparent">
+        {% for item in page_obj %}
+          <div class="item">
+            <img src="{% static item.img %}" alt="{{ item.nombre }}" style="max-width: 100%;">
+            <p> Imagen: {{ item.img }} </p>
+            <p> Nombre: {{ item.nombre }} </p>
+            <p> Marca: {{ item.marca }} </p>
+            <p> Precio: {{ item.precio }} </p>
+          </div>
+        {% endfor %}
+      </div>
+      <!-- Paginador -->
+      {% comment %} Preservar filtros {% endcomment %}
+      {% with request.GET.urlencode as query_params %}
+        {% with query_params|cut:'page='|cut:'&' as clean_params %}
+          <div class="pagination">
+            {% if page_obj.has_previous %}
+              <a href="?{{ clean_params }}&page=1">&laquo;</a>
+              <a href="?{{ clean_params }}&page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                <span class="current">{{ num }}</span>
+              {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?{{ clean_params }}&page={{ num }}">{{ num }}</a>
+              {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+              <a href="?{{ clean_params }}&page={{ page_obj.next_page_number }}">Siguiente</a>
+              <a href="?{{ clean_params }}&page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+            {% endif %}
+          </div>
+        {% endwith %}
+      {% endwith %}
+
+    </div>
+
+  </div>
+
+</section>
+<script src="{% static 'js/catalogo.js' %}"></script>
+{% endblock %}

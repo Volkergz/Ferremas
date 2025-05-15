@@ -43,7 +43,7 @@ def autenticateUser():
     
     else:
         #Si el usuario existe, devolvemos un mensaje de éxito
-        return jsonify({'data': result,}), 200
+        return jsonify(result), 200
 
 #Nota: ejecutar el siguiente comando para correr el servidor en modo debug
 # flask run --host=0.0.0.0 --port=5000 --debug
