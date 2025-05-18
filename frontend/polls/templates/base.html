@@ -3,7 +3,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %} base html {% endblock %}</title>
+    <title>{% block title %} Ferremas {% endblock %}</title>
 
     <link rel="shortcut icon" href="{% static 'img/icono.png' %}" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,7 +46,7 @@
                 <a href="#"><i class="bi bi-person-circle text-white"></i></a>
             </button>
             <ul class="center dropdown-menu">
-                {% if user.is_authenticated %}
+                {% if isAutenticated %}
                   <li> <h5 class="text-center"> {{ user.nombre }} </h5> </li>
                   <li> <a class="text-center dropdown-item" href="#"> Perfil </a> </li>
                   <li> <hr class="dropdown-divider"> </li>

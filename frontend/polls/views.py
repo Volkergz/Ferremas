@@ -11,7 +11,22 @@ import uuid
 
 # Vista de la página de inicio
 def home(request):
-    return render(request, 'home.html')
+    
+    # Verifica si el usuario ya está autenticado
+    try:
+
+        if request.user.is_authenticated:
+            context = {
+                "isAutenticated": True
+            }
+        return render(request, 'home.html', context)
+    
+    except Exception as e:
+
+        context = {
+            "isAutenticated": False
+        }
+        return render(request, 'home.html', context)
 
 # Vista de inicio de sesión
 @csrf_exempt
