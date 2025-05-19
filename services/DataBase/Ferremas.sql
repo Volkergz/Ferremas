@@ -199,6 +199,21 @@ INSERT INTO `usuario` VALUES (1,'hleymgabrielhidalgo@gmail.com','haleym','Haleym
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+DROP TABLE IF EXISTS `moneda`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `moneda` (
+  `id_moneda` int NOT NULL AUTO_INCREMENT,
+  `cod_moneda` varchar(5) NOT NULL,
+  `valor` int NOT NULL,
+  `fecha` date NOT NULL
+  PRIMARY KEY (`id_moneda`),
+  UNIQUE KEY `id_moneda` (`id_moneda`),
+  UNIQUE KEY `cod_moneda` (`cod_moneda`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `moneda` VALUES (1,'USD',1, '2001-01-01');
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;

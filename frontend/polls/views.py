@@ -85,49 +85,41 @@ def catalogo_view(request):
         request.session['moneda'] = moneda
 
     # Solicita la lista de productos a la API
-    items = req.post('http://localhost:5001/productos')
+    response = req.post('http://localhost:5001/productos')
 
     # Si la respuesta es exitosa, se obtiene la lista de productos
-    if items.status_code == 200:
+    if response.status_code == 200:
 
-        # Si la moneda es USD, convierte los precios
-        if moneda == 'USD':
+        # Si la moneda no es USD, guarda los productos directamente
+        if moneda != 'USD':
+            items = response.json()
 
-            try:
-                #obtiene el valor de la moneda desde la API
-                valor_moneda = req.get('http://localhost:5003/getDollar')
-
-                usd = 0
-
-                # Si la respuesta es exitosa, se obtiene el valor de la moneda
-                if valor_moneda.status_code == 200:
-                    valor_moneda = valor_moneda.json()
-                    usd = valor_moneda['dollar_value']
-
-                # Convierte los precios de CLP a USD
-                items_data = items.json()
-
-                # Itera sobre cada producto y convierte el precio
-                for item in items_data:
-                    # Convierte el precio de CLP a USD
-                    item['precio'] = round(item['precio'] / usd, 2)
-
-                # Actualiza la lista de productos con los precios convertidos
-                items = items_data
-                
-            # Maneja cualquier error que ocurra durante la conversión
-            except req.exceptions.RequestException as e:
-                print("Error al obtener el valor de la moneda: ", e)
-                messages.error(request, "Error al obtener el valor de la moneda")
-
-            except Exception as e:
-                print("Error al obtener el valor de la moneda: ", e)
-                messages.error(request, "Error al obtener el valor de la moneda")
-                
-        # Si la moneda es CLP, no se necesita conversión
         else:
-            items = items.json()
-        
+
+            # Si la moneda es USD, realiza una solicitud a la API para obtener el valor del dólar
+            res = req.get('http://localhost:5003/getDollar')
+
+            # Si la respuesta es exitosa, se obtiene el valor del dólar
+            if res.status_code == 200:
+
+                # Extrae el valor del dólar de la respuesta
+                usd = res.json().get('dollar_value')
+
+                # Si el valor del dólar es válido, convierte los precios
+                if usd and usd > 0:
+
+                    # Convierte los precios de los productos a USD
+                    items_data = response.json()
+
+                    # Convierte los precios de CLP a USD
+                    for item in items_data:
+                        print(item)
+                        item['precio'] = round(item['precio'] / usd, 2)
+                    
+                    # Almacena los productos convertidos en la variable items
+                    items = items_data
+                else:
+                    messages.error(request, "Tasa de cambio no válida.")
     else:
         items = []
 
