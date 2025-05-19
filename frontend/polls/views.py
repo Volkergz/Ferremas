@@ -89,12 +89,47 @@ def catalogo_view(request):
 
     # Si la respuesta es exitosa, se obtiene la lista de productos
     if items.status_code == 200:
-        items = items.json()
+
+        # Si la moneda es USD, convierte los precios
+        if moneda == 'USD':
+
+            try:
+                #obtiene el valor de la moneda desde la API
+                valor_moneda = req.get('http://localhost:5003/getDollar')
+
+                usd = 0
+
+                # Si la respuesta es exitosa, se obtiene el valor de la moneda
+                if valor_moneda.status_code == 200:
+                    valor_moneda = valor_moneda.json()
+                    usd = valor_moneda['dollar_value']
+
+                # Convierte los precios de CLP a USD
+                items_data = items.json()
+
+                # Itera sobre cada producto y convierte el precio
+                for item in items_data:
+                    # Convierte el precio de CLP a USD
+                    item['precio'] = round(item['precio'] / usd, 2)
+
+                # Actualiza la lista de productos con los precios convertidos
+                items = items_data
+                
+            # Maneja cualquier error que ocurra durante la conversión
+            except req.exceptions.RequestException as e:
+                print("Error al obtener el valor de la moneda: ", e)
+                messages.error(request, "Error al obtener el valor de la moneda")
+
+            except Exception as e:
+                print("Error al obtener el valor de la moneda: ", e)
+                messages.error(request, "Error al obtener el valor de la moneda")
+                
+        # Si la moneda es CLP, no se necesita conversión
+        else:
+            items = items.json()
+        
     else:
         items = []
-
-    # Transforma la lista de productos para incluir la moneda seleccionada
-    
 
     # Paginación de los productos
     paginator = Paginator(items, 16) # 16 productos por página
@@ -105,6 +140,30 @@ def catalogo_view(request):
     return render(request, 'Catalogo.html', {
         'page_obj': page_obj
     })
+
+def cambiarMoneda(request):
+    try:
+        # Obtener la moneda actual
+        moneda = request.session.get('moneda')
+
+        # Alternar la moneda
+        if moneda == 'USD':
+            request.session['moneda'] = 'CLP'
+        elif moneda == 'CLP':
+            request.session['moneda'] = 'USD'
+        else:
+            request.session['moneda'] = 'USD'
+
+        # Redirige a la página anterior si existe, si no, al home
+        referer = request.META.get('HTTP_REFERER')
+        if referer:
+            return redirect(referer)
+        else:
+            return redirect('home')
+        
+    except Exception as e:
+        return redirect('home')
+
 
 # Vista de cierre de sesión
 def logout_view(request):

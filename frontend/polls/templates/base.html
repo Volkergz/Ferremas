@@ -33,6 +33,17 @@
         <a class="navbar-brand fw-bold text-white" href="/catalogo"> Catalogo</a>
       </div>
       
+      <!-- boton moneda -->
+        <div class="margin50">
+            <button class="fmasuserbutton" type="button">
+                {% if request.session.moneda == 'USD' %}
+                    <a href="/cambiarMoneda" style="color: white; text-decoration: none;">$USD </a>
+                {% else %}
+                    <a href="/cambiarMoneda" style="color: white; text-decoration: none;">$CLP </a>
+                {% endif %}
+            </button>
+        </div>
+
       <!-- boton carrito -->
         <div class="margin50">
             <button class="fmasuserbutton" type="button">
