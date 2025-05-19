@@ -4,12 +4,10 @@ from transbank.common.options import WebpayOptions
 from transbank.common.integration_type import IntegrationType
 from transbank.common.integration_commerce_codes import IntegrationCommerceCodes
 from transbank.common.integration_api_keys import IntegrationApiKeys
-from flask_cors import CORS
 
 ## Installs necesarios: flask , transbank-sdk , flask-cors
 
 app = Flask(__name__)
-CORS(app)
 
 datos = WebpayOptions(
     commerce_code=IntegrationCommerceCodes.WEBPAY_PLUS,
