@@ -95,7 +95,6 @@ def catalogo_view(request):
             items = response.json()
 
         else:
-
             # Si la moneda es USD, realiza una solicitud a la API para obtener el valor del dólar
             res = req.get('http://localhost:5003/getDollar')
 
@@ -113,7 +112,6 @@ def catalogo_view(request):
 
                     # Convierte los precios de CLP a USD
                     for item in items_data:
-                        print(item)
                         item['precio'] = round(item['precio'] / usd, 2)
                     
                     # Almacena los productos convertidos en la variable items
@@ -169,15 +167,40 @@ def producto_view(request, id):
 
     # Si la respuesta es exitosa, se obtiene el producto
     if response.status_code == 200:
-        producto = response.json()
+        
+        # Verifica la moneda seleccionada
+        moneda = request.session.get('moneda')
 
+        # Si no hay moneda seleccionada, establece una por defecto
+        if not moneda:
+            moneda = 'CLP'
+            request.session['moneda'] = moneda
+
+        producto = response.json()
+        
+        # Si la moneda es USD, realiza una solicitud a la API para obtener el valor del dólar
+        if moneda == 'USD':
+            # Si la moneda es USD, realiza una solicitud a la API para obtener el valor del dólar
+            res = req.get('http://localhost:5003/getDollar')
+
+            # Si la respuesta es exitosa, se obtiene el valor del dólar
+            if res.status_code == 200:
+
+                # Extrae el valor del dólar de la respuesta
+                usd = res.json().get('dollar_value')
+
+                # Si el valor del dólar es válido, convierte los precios
+                if usd and usd > 0:
+                    producto['precio'] = round(producto['precio'] / usd, 2)
+                    
+                else:
+                    messages.error(request, "Tasa de cambio no válida.")
+        
         # Renderiza la plantilla con los detalles del producto
-        return render(request, 'producto.html', {
-            'producto': producto
-        })
-    
-    # Si la respuesta no es exitosa, redirige a la página de catálogo
-    return redirect('catalogo')
+        return render(request, 'producto.html', {'producto': producto})
+    else:    
+        # Si la respuesta no es exitosa, redirige a la página de catálogo
+        return redirect('catalogo')
 
 def add_to_cart(request):
     # Verifica si el método de la solicitud es POST
@@ -189,8 +212,6 @@ def add_to_cart(request):
             'id_usuario': int(request.session.get('user_id')),
             'cantidad': int(request.POST.get('cantidad'))
         }
-
-        print(data)
 
         # Realiza una solicitud POST a la API para agregar el producto al carrito
         response = req.post('http://localhost:5002/addCar', json=data)
@@ -257,6 +278,88 @@ def removeItem(request, id_producto):
     
     return redirect('carrito')  # Por seguridad, redirige si acceden por otro método
 
+def iniciarCompra(request):
+
+    # Verifica si el usuario está autenticado
+    if not request.user.is_authenticated:
+        messages.error(request, "Debes iniciar sesión para realizar un pago.")
+        return redirect('login')
+    
+    # Verifica si la petición es POST
+    if request.method != 'POST':
+        messages.error(request, "Método no permitido.")
+        return redirect('carrito')
+
+    # Obtiene el ID del usuario desde la sesión
+    id_usuario = request.session.get('user_id')
+
+    # Obtiene el carrito del usuario
+    response = req.get(f'http://localhost:5002/getDataOrden/{id_usuario}')
+
+    # Si la respuesta es exitosa, se obtiene el carrito
+    if response.status_code == 200:
+
+        # Extrae los datos del carrito
+        data = response.json()
+
+        # Inicia la transacción
+        res = req.post('http://localhost:5004/crear-transaccion', json=data)
+
+        # Si la respuesta es exitosa, se obtiene el token y la URL
+        if res.status_code == 200:
+            response = res.json()
+            token = response['token']
+            url = response['url']
+            return redirect(f'{url}?token_ws={token}')
+        else:
+            messages.error(request, "Error al iniciar la transacción.")
+            return redirect('carrito')
+
+    else:
+        messages.error(request, "Error al obtener el carrito.")
+        return redirect('carrito')
+
+def confirmarCompra(request):
+    # Verifica si la petición es GET
+    if request.method != 'GET':
+        messages.error(request, "Método no permitido.")
+        return redirect('carrito')
+
+    token = request.GET.get('token_ws')
+
+    # Realiza una solicitud POST a la API para confirmar la transacción
+    response = req.post('http://localhost:5004/confirmar-transaccion', json={'token_ws': token})
+
+    # Si la respuesta es exitosa, se obtiene la respuesta
+    if response.status_code == 200:
+        response = response.json()
+
+        print(response)
+
+        # Verifica el estado de la transacción
+        if response['status'] == 'AUTHORIZED':
+            # Si la transacción fue autorizada, actualiza el estado de la orden
+            id_orden = response['buy_order']
+            id_usuario = request.session.get('user_id')
+
+            # Realiza una solicitud POST a la API para actualizar el estado de la orden
+            req.post(f'http://localhost:5002/cerrarCompra/{id_orden}/{id_usuario}')
+
+            messages.success(request, "Compra realizada exitosamente.")
+            
+            # Redirige a la página de confirmación de compra
+            #return redirect('confirmarCompra')
+            return redirect('home')
+
+        # Si la transacción no fue autorizada, muestra un mensaje de error
+        else:
+            messages.error(request, "La transacción no fue autorizada.")
+            # Redirección a la pagina de error de pago
+            redirect('carrito')
+    else:
+        # Redirección a la pagina de error de pago
+        redirect('carrito')
+
 # Vista de registro de usuario
 def register_view(request):
     if request.method == 'POST':
@@ -270,5 +373,6 @@ def register_view(request):
             User.objects.create_user(username=username, password=password)
             messages.success(request, "Usuario registrado exitosamente")
             return redirect('login')  # Redirige a la página de login tras registrar
+    
     # Si el método no es POST, solo muestra el formulario
     return render(request, 'register.html')

@@ -9,7 +9,7 @@ from transbank.common.integration_api_keys import IntegrationApiKeys
 
 app = Flask(__name__)
 
-datos = WebpayOptions(
+options = WebpayOptions(
     commerce_code=IntegrationCommerceCodes.WEBPAY_PLUS,
     api_key=IntegrationApiKeys.WEBPAY,
     integration_type=IntegrationType.TEST
@@ -18,13 +18,29 @@ datos = WebpayOptions(
 @app.route('/crear-transaccion', methods=['POST'])
 def crear_transaccion():
     data = request.json
-    buy_order = data['buy_order']
-    session_id = data['session_id']
-    amount = data['amount']
-    return_url = data['return_url']
+    buy_order = str(data['id_orden'])
+    session_id = str(data['id_usuario'])
+    amount = data['total']
+    return_url = 'http://localhost:8000/carrito/confirmarCompra'
 
-    tx = Transaction(datos)
+    # Validar los datos recibidos
+    if not buy_order or not session_id or not amount or not return_url:
+        return jsonify({"error": "Faltan datos requeridos"}), 400
+
+    # Validar el formato de amount
+    try:
+        amount = float(amount)
+        if amount <= 0:
+            raise ValueError
+    except ValueError:
+        return jsonify({"error": "El monto debe ser un número positivo"}), 400
+
+    # Generamos la transacción
+    tx = Transaction(options)
+
+    # Crear la transacción
     response = tx.create(buy_order, session_id, amount, return_url)
+
     return jsonify(response)
 
 @app.route('/confirmar-transaccion', methods=['POST'])
@@ -32,9 +48,10 @@ def confirmar_transaccion():
     data = request.json
     token = data['token_ws']
 
-    tx = Transaction(datos)
+    tx = Transaction(options)
     response = tx.commit(token)
     return jsonify(response)
 
+#Ejecutamos el servidor en modo debug
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(host='0.0.0.0', port=5004, debug=True)

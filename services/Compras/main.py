@@ -50,19 +50,21 @@ def addCar():
             return jsonify({'message': 'No se pudo insertar el detalle de la orden'}), 500
 
         con.commit()
+        
+        #cierra el cursor
+        cursor.close()
+
         return jsonify({'message': 'Producto agregado al carrito'}), 200
 
     except Exception as e:
         con.rollback()
         return jsonify({'error': str(e)}), 500
 
-    finally:
-        cursor.close()
-
 @app.route('/getOrden/<int:id_usuario>', methods=['GET'])
 def gerOrden(id_usuario):
 
     try:
+
         # Crear un cursor para ejecutar consultas
         cursor = con.cursor(dictionary=True)
 
@@ -83,7 +85,12 @@ def gerOrden(id_usuario):
         id_orden = result['id_orden']
 
         # Obtener los productos del carrito
-        stmt = "SELECT p.id_producto, p.nombre, p.marca, p.img, d.cantidad, d.subtotal, d.precio_u FROM detalle_orden d JOIN producto p ON d.id_producto = p.id_producto WHERE d.id_orden = %s"
+        stmt = """
+        SELECT d.id_detalle, p.nombre, p.marca, p.img, d.cantidad, d.subtotal, d.precio_u 
+        FROM detalle_orden d 
+        JOIN producto p ON d.id_producto = p.id_producto 
+        WHERE d.id_orden = %s
+        """
         
         # Ejecutar la consulta
         cursor.execute(stmt, (id_orden,))
@@ -95,16 +102,17 @@ def gerOrden(id_usuario):
         if not result:
             return jsonify({'message': 'No se encontraron productos en el carrito'}), 404
 
+        # Cerrar la conexión
+        cursor.close()
+
         return jsonify(result), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-    finally:
-        cursor.close()
 
-@app.route('/removeItem/<int:id_producto>/<int:id_usuario>', methods=['DELETE'])
-def removeItem(id_producto, id_usuario):
+@app.route('/removeItem/<int:id_detalle>/<int:id_usuario>', methods=['DELETE'])
+def removeItem(id_detalle, id_usuario):
     
     try:
         # Crear un cursor para ejecutar consultas
@@ -127,25 +135,81 @@ def removeItem(id_producto, id_usuario):
         id_orden = result['id_orden']
 
         # Eliminar el producto del carrito
-        stmt = "DELETE FROM detalle_orden WHERE id_orden = %s AND id_producto = %s"
+        stmt = "DELETE FROM detalle_orden WHERE id_orden = %s AND id_detalle = %s"
         
         # Ejecutar la consulta
-        cursor.execute(stmt, (id_orden, id_producto))
+        cursor.execute(stmt, (id_orden, id_detalle))
         
         # Verificar si se eliminó el producto
         if cursor.rowcount == 0:
             return jsonify({'message': 'No se pudo eliminar el producto del carrito'}), 500
 
         con.commit()
+        cursor.close()
         return jsonify({'message': 'Producto eliminado del carrito'}), 200
 
     except Exception as e:
         con.rollback()
         return jsonify({'error': str(e)}), 500
 
-    finally:
+@app.route('/getDataOrden/<int:id_usuario>', methods=['GET'])
+def getDataOrden(id_usuario):
+    try:
+        # Crear un cursor para ejecutar consultas
+        cursor = con.cursor(dictionary=True)
+
+        # Verificar si el usuario tiene una orden activa
+        stmt = """
+        SELECT oc.id_usuario, oc.id_orden, SUM(do.subtotal) AS total
+        FROM detalle_orden do
+        JOIN orden_compra oc ON do.id_orden = oc.id_orden
+        WHERE oc.id_usuario = %s AND oc.estado = false
+        GROUP BY oc.id_usuario, oc.id_orden;
+        """
+
+        # Ejecutar la consulta
+        cursor.execute(stmt, (id_usuario,))
+        
+        # Obtener el resultado
+        result = cursor.fetchone()
+
+        # Si no se encontró una orden activa, retornar un mensaje
+        if result is None:
+            return jsonify({'message': 'No se encontraron Ordenes de este usuario'}), 404
+
+        # Cerrar la conexión
         cursor.close()
 
+        # Retornar el resultado
+        return jsonify(result), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/cerrarCompra/<int:id_orden>/<int:id_usuario>', methods=['POST'])
+def cerrarCompra(id_orden, id_usuario):
+    try:
+        # Crear un cursor para ejecutar consultas
+        cursor = con.cursor(dictionary=True)
+
+        # Actualizar el estado de la orden a 1 (cerrada)
+        stmt = "UPDATE orden_compra SET estado = 1 WHERE id_orden = %s AND id_usuario = %s"
+        
+        # Ejecutar la consulta
+        cursor.execute(stmt, (id_orden, id_usuario))
+        
+        # Verificar si se actualizó la orden
+        if cursor.rowcount == 0:
+            return jsonify({'message': 'No se pudo cerrar la orden'}), 500
+
+        con.commit()
+        con.close()
+
+        return jsonify({'message': 'Orden cerrada exitosamente'}), 200
+
+    except Exception as e:
+        con.rollback()
+        return jsonify({'error': str(e)}), 500
 
 #Nota: ejecutar el siguiente comando para correr el servidor en modo debug
 # flask run --host=0.0.0.0 --port=5002 --debug

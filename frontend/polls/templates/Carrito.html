@@ -33,12 +33,12 @@
                                         <span><b> Total: </b> ${{ item.subtotal }} </span>
 
                                         <!-- Formulario de acciones del producto -->
-                                        <form method="POST" action="{% url 'carrito/removeItem' item.id_producto %}">
+                                        <form method="POST" name="remove" action="{% url 'carrito/removeItem' item.id_detalle %}">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-danger" style="margin-top: 10px;">
                                                 <i class="bi bi-trash"></i> Eliminar
                                             </button>
-                                        
+                                        </form>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -52,10 +52,21 @@
     
         <!-- Resumen de la compra -->
         <div class="d-flex justify-content-center" style="grid-column-start: 3;">
-            <div class="cafeO" style="width: 80%; margin: 40px 10vw 30px 0; border-radius: 30px;">
-                Costo de la compra
+            <span class="cafeO" style="width: 80%; margin: 40px 10vw 30px 0; border-radius: 30px; text-align: center; color: white;">
+                <h2 style="margin: 10px;">Resumen de Compra</h2>
                 <br>
-                <span><b>Total: </b> ${{total}} </span>
+                <span>
+                    {% if productos %}
+                        <b>Total: </b> ${{total}} </span>
+                    {% else %}
+                        <b>Total: </b> $0 </span>
+                    {% endif %}
+                    
+                    <form method="POST" name="pagar" action="{% url 'carrito/iniciarCompra' %}">
+                        {% csrf_token %}
+                        <button style="margin:20px;" type="submit"> Continuar </button>
+                    </form>
+                </span>
             </div>
         </div>
 
