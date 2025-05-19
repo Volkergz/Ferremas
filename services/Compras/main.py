@@ -59,10 +59,96 @@ def addCar():
     finally:
         cursor.close()
 
+@app.route('/getOrden/<int:id_usuario>', methods=['GET'])
+def gerOrden(id_usuario):
+
+    try:
+        # Crear un cursor para ejecutar consultas
+        cursor = con.cursor(dictionary=True)
+
+        # Verificar si el usuario tiene una orden activa
+        stmt = "SELECT id_orden FROM orden_compra WHERE id_usuario = %s AND estado = 0"
+
+        # Ejecutar la consulta
+        cursor.execute(stmt, (id_usuario,))
+        
+        # Obtener el resultado
+        result = cursor.fetchone()
+
+        # Si no se encontró una orden activa, retornar un mensaje
+        if result is None:
+            return jsonify({'message': 'No se encontraron productos'}), 404
+
+        # Si se encontró una orden activa, obtener los productos del carrito
+        id_orden = result['id_orden']
+
+        # Obtener los productos del carrito
+        stmt = "SELECT p.id_producto, p.nombre, p.marca, p.img, d.cantidad, d.subtotal, d.precio_u FROM detalle_orden d JOIN producto p ON d.id_producto = p.id_producto WHERE d.id_orden = %s"
+        
+        # Ejecutar la consulta
+        cursor.execute(stmt, (id_orden,))
+        
+        # Obtener el resultado
+        result = cursor.fetchall()
+
+        # Si no se encontraron productos, retornar un mensaje
+        if not result:
+            return jsonify({'message': 'No se encontraron productos en el carrito'}), 404
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    finally:
+        cursor.close()
+
+@app.route('/removeItem/<int:id_producto>/<int:id_usuario>', methods=['DELETE'])
+def removeItem(id_producto, id_usuario):
+    
+    try:
+        # Crear un cursor para ejecutar consultas
+        cursor = con.cursor(dictionary=True)
+
+        # Verificar si el usuario tiene una orden activa
+        stmt = "SELECT id_orden FROM orden_compra WHERE id_usuario = %s AND estado = 0"
+
+        # Ejecutar la consulta
+        cursor.execute(stmt, (id_usuario,))
+        
+        # Obtener el resultado
+        result = cursor.fetchone()
+
+        # Si no se encontró una orden activa, retornar un mensaje
+        if result is None:
+            return jsonify({'message': 'No se encontraron productos'}), 404
+
+        # Si se encontró una orden activa, eliminar el producto del carrito
+        id_orden = result['id_orden']
+
+        # Eliminar el producto del carrito
+        stmt = "DELETE FROM detalle_orden WHERE id_orden = %s AND id_producto = %s"
+        
+        # Ejecutar la consulta
+        cursor.execute(stmt, (id_orden, id_producto))
+        
+        # Verificar si se eliminó el producto
+        if cursor.rowcount == 0:
+            return jsonify({'message': 'No se pudo eliminar el producto del carrito'}), 500
+
+        con.commit()
+        return jsonify({'message': 'Producto eliminado del carrito'}), 200
+
+    except Exception as e:
+        con.rollback()
+        return jsonify({'error': str(e)}), 500
+
+    finally:
+        cursor.close()
 
 
 #Nota: ejecutar el siguiente comando para correr el servidor en modo debug
-# flask run --host=0.0.0.0 --port=5000 --debug
+# flask run --host=0.0.0.0 --port=5002 --debug
 
 #Ejecutamos el servidor en modo debug
 if __name__ == '__main__':

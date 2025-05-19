@@ -1,7 +1,7 @@
 
 {% extends 'base.html' %}
 
-{% block title %} vista de catalogo {% endblock %}
+{% block title %} Carrito de Compras {% endblock %}
 
 {% block content %}
 
@@ -15,83 +15,48 @@
 
    <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr);">
 
+        <!-- Items del carrito -->
         <div class="d-flex justify-content-center" style="grid-column: span 2 / span 2; grid-row: span 2 / span 2;">
-
-            <div class="blanco fmscenter" style="width: 60vw; height: 78vh; margin: 40px 5vw 30px 10vw; border-radius: 30px;">
-                    
-                <div id="CARRITO" style="height: 80%; width: 90%; background-color: rgb(240, 0, 0); overflow-x: hidden;">
-                    
+            <div class="blanco fmscenter" style="width: 60vw; height: 78vh; margin: 40px 5vw 30px 10vw; border-radius: 30px;">  
+                <div id="CARRITO" style="height: 80%; width: 90%; overflow-x: hidden;">
                     <div>
-                        
-                        
-                        <div class="card flex-md-row mb-4">
-                            
-                            <img class="card-img-right flex-auto d-none d-lg-block" style="width: 200px; height: 200px; margin: 10px; border: solid 1px black" src="{% static 'img/juegos de herramientas.webp' %}">
-                       
-                            <div class="card-body d-flex flex-column align-items-start">
+                        {% if productos %}
+                            {% for item in productos %}
+                                <div class="card flex-md-row mb-4">
+                                    <img class="card-img-right flex-auto d-none d-lg-block" style="width: 200px; height: 200px; margin: 10px; border: solid 1px black" src="{% static item.img %}">
+                                    <div class="card-body d-flex flex-column align-items-start">
+                                        <!-- Información del Producto -->
+                                        <span><b> Producto: </b> {{ item.nombre }} </span> 
+                                        <span><b> Marca: </b> {{ item.marca }} </span>
+                                        <span><b> Cantidad: </b> {{ item.cantidad }}</span>
+                                        <span><b> Precio: </b> ${{ item.precio_u }} </span>
+                                        <span><b> Total: </b> ${{ item.subtotal }} </span>
 
-                                <span><b> Producto: </b> datos datos datos datos  </span> 
-                                <span><b> Marca: </b> datos datos datos datos  </span>
-                                <span><b> Cantidad: </b> datos datos datos datos <b> $100.000 </b> </span>
-                                
-                            </div>
-
-                        </div>
-
-                        <div class="card flex-md-row mb-4">
-                            
-                            <img class="card-img-right flex-auto d-none d-lg-block" style="width: 200px; height: 200px; margin: 10px; border: solid 1px black" src="{% static 'img/juegos de herramientas.webp' %}">
-                       
-                            <div class="card-body d-flex flex-column align-items-start">
-
-                                <span><b> Producto: </b> datos datos datos datos  </span> 
-                                <span><b> Marca: </b> datos datos datos datos  </span>
-                                <span><b> Cantidad: </b> datos datos datos datos <b> $100.000 </b> </span>
-                                
-                            </div>
-
-                        </div>
-
-                        <div class="card flex-md-row mb-4">
-                            
-                            <img class="card-img-right flex-auto d-none d-lg-block" style="width: 200px; height: 200px; margin: 10px; border: solid 1px black" src="{% static 'img/juegos de herramientas.webp' %}">
-                       
-                            <div class="card-body d-flex flex-column align-items-start">
-
-                                <span><b> Producto: </b> datos datos datos datos  </span> 
-                                <span><b> Marca: </b> datos datos datos datos  </span>
-                                <span><b> Cantidad: </b> datos datos datos datos <b> $100.000 </b> </span>
-                                
-                            </div>
-
-                        </div>
-
+                                        <!-- Formulario de acciones del producto -->
+                                        <form method="POST" action="{% url 'carrito/removeItem' item.id_producto %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger" style="margin-top: 10px;">
+                                                <i class="bi bi-trash"></i> Eliminar
+                                            </button>
+                                        
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <h2 class="card-img-right flex-auto d-none d-lg-block" style="width: 100%" >El carrito está vacío</h2>
+                        {% endif %}
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
+    
+        <!-- Resumen de la compra -->
         <div class="d-flex justify-content-center" style="grid-column-start: 3;">
-            
             <div class="cafeO" style="width: 80%; margin: 40px 10vw 30px 0; border-radius: 30px;">
-                
                 Costo de la compra
-
+                <br>
+                <span><b>Total: </b> ${{total}} </span>
             </div>
-
-        </div>
-
-        <div class="d-flex justify-content-center" style="grid-column-start: 3; grid-row-start: 2;">
-
-           <div class="cafeO" style="width: 80%; margin: 0 10vw 30px 0; border-radius: 30px;">
-                
-                Opciones retiro/despacho
-
-            </div>
-
         </div>
 
     </div> 

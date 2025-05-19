@@ -12,21 +12,20 @@ import uuid
 # Vista de la página de inicio
 def home(request):
     
-    # Verifica si el usuario ya está autenticado
-    try:
+    return render(request, 'home.html')
 
-        if request.user.is_authenticated:
-            context = {
-                "isAutenticated": True
-            }
-        return render(request, 'home.html', context)
+def cambiarMoneda(request):
+    # Verifica si el método de la solicitud es POST
+    if request.method == 'POST':
+        # Obtiene la moneda seleccionada desde el formulario
+        moneda = request.POST.get('moneda')
+        # Almacena la moneda en la sesión
+        request.session['moneda'] = moneda
+        # Redirige a la página de inicio
+        return redirect('home')
     
-    except Exception as e:
-
-        context = {
-            "isAutenticated": False
-        }
-        return render(request, 'home.html', context)
+    # Si no es un método POST, redirige a la página de inicio
+    return redirect('home')
 
 # Vista de inicio de sesión
 @csrf_exempt
@@ -64,13 +63,10 @@ def login_view(request):
             user.save()
 
             request.session['user_id'] = user_data['id_usuario']
+            request.session['username'] = user_data['nombres']
             request.session['role'] = user_data['id_rol']     
 
             login(request, user)
-
-            # Redirige a la página de inicio de admintración tras iniciar sesión
-            #if user_data['id_rol'] == 1:
-            #    return redirect('admin')
 
             # Redirige a la página de inicio de usuario tras iniciar sesión
             return redirect('home')
@@ -80,7 +76,15 @@ def login_view(request):
 
 def catalogo_view(request):
 
-    # Intenta validar las credenciales del usuario
+    # Verifica la moneda seleccionada
+    moneda = request.session.get('moneda')
+
+    # Si no hay moneda seleccionada, establece una por defecto
+    if not moneda:
+        moneda = 'CLP'
+        request.session['moneda'] = moneda
+
+    # Solicita la lista de productos a la API
     items = req.post('http://localhost:5001/productos')
 
     # Si la respuesta es exitosa, se obtiene la lista de productos
@@ -89,20 +93,8 @@ def catalogo_view(request):
     else:
         items = []
 
-    # Filtra los productos según los parámetros de búsqueda
-
-    herramienta = request.GET.get('reemplazar')
-    if herramienta:
-        items = items.filter(herramienta__iexact=herramienta)
-
-    precio = request.GET.get('reemplazar')
-    if precio:
-        min_price, max_price = map(int, precio.split('-'))
-        items = items.filter(precio__gte=min_price, precio__lte=max_price)
-
-    marca = request.GET.get('reemplazar')
-    if marca:
-        items = items.filter(marca__iexact=marca)
+    # Transforma la lista de productos para incluir la moneda seleccionada
+    
 
     # Paginación de los productos
     paginator = Paginator(items, 16) # 16 productos por página
@@ -164,7 +156,55 @@ def add_to_cart(request):
     return redirect('catalogo')
 
 def carrito_view(request):
+
+    #Verifica que este accediendo por el metodo GET
+    if request.method == 'GET':
+        
+        # Verifica si el usuario está autenticado
+        if not request.user.is_authenticated:
+            return redirect('login')
+        
+        # Realiza una solicitud GET a la API para obtener los productos del carrito
+        response = req.get(f'http://localhost:5002/getOrden/{request.session.get("user_id")}')
+        
+        # Si la respuesta es exitosa, se obtiene el carrito
+        if response.status_code == 200:
+            productos = response.json()
+
+            # Calcula el total del carrito
+            total = sum(item['subtotal'] for item in productos)
+
+            #Creamos un diccionario para almacenar el contexto
+            contexto = {
+                'productos': productos,
+                'total': total
+            }
+
+            return render(request, 'carrito.html', contexto)
+        
+        # Si la respuesta no es exitosa, mostramos el carrito vacío
+        return render(request, 'carrito.html')
+
     return render(request, 'carrito.html')
+
+def removeItem(request, id_producto):
+    if request.method == 'POST':
+        id_usuario = request.session.get('user_id')
+
+        if not id_usuario:
+            messages.error(request, "Usuario no autenticado.")
+            return redirect('carrito')
+
+        # Llama al backend Flask
+        response = req.delete(f'http://localhost:5002/removeItem/{id_producto}/{id_usuario}')
+
+        if response.status_code == 200:
+            return redirect('carrito')
+        else:
+            messages.error(request, "Error al eliminar el producto del carrito.")
+            return redirect('carrito')
+    
+    return redirect('carrito')  # Por seguridad, redirige si acceden por otro método
 
 # Vista de registro de usuario
 def register_view(request):

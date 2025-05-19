@@ -36,7 +36,7 @@
       <!-- boton carrito -->
         <div class="margin50">
             <button class="fmasuserbutton" type="button">
-                <a href="#"><i class="bi bi-cart fs-4 text-white"></i></a>
+                <a href="/carrito"><i class="bi bi-cart fs-4 text-white"></i></a>
             </button>
         </div>
 
@@ -46,8 +46,8 @@
                 <a href="#"><i class="bi bi-person-circle text-white"></i></a>
             </button>
             <ul class="center dropdown-menu">
-                {% if isAutenticated %}
-                  <li> <h5 class="text-center"> {{ user.nombre }} </h5> </li>
+                {% if request.session.user_id %}
+                  <li> <h5 class="text-center"> {{ request.session.username }} </h5> </li>
                   <li> <a class="text-center dropdown-item" href="#"> Perfil </a> </li>
                   <li> <hr class="dropdown-divider"> </li>
                   <li> <a class="warning text-center dropdown-item" href="{% url 'logout' %}"> Cerrar sesión </a> </li>
