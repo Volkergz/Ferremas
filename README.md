@@ -38,49 +38,14 @@ git clone https://github.com/Volkergz/Ferremas/tree/main
 cd Ferremas
 ```
 
-* Instalar "Virtual Enviroment" 
-```bash
-pip -m venv venv
-```
-
-* Crear ambiente virtual en cmd
-```bash
-python -m venv venv
-```
-
-* Activar ambiente virtual en cmd
-```bash
-.\venv\Scripts\activate
-```
-Nota: si esta usando otra terminal, consulte la documentacion de [VirtualEnviroment](https://docs.python.org/3/library/venv.html#how-venvs-work)
-
 ## 💻 Ejecución
 
-### Servicio de Cliente
+### Correr los servicios
+Si esta en Windows, ejecute el archivo init.bat
 
-Si ya activo el ambiente virtual, ejecute el siguiente comando
+### El servicio de frontend se ejecutara en https://127.0.0.1:8000/.
 
-* Correr el servidor
-```bash
-py frontend\manage.py runserver
-```
-
-### Servicio de Autenticación
-
-* Correr el servidor
-```bash
-py services\Autenticacion\main.py
-```
-#### El servicio se ejecutará en http://127.0.0.1:5000/.
-Nota: Para probar los EndPoints use [Postman](https://www.postman.com/)
-
-### Servicio de Transbank
-
-* Correr el servidor
-```bash
-py services\Transbank\main.py
-```
-#### El servicio se ejecutará en http://127.0.0.1:5001/.
+#### Los servicios se ejecutarán en http://127.0.0.1:500X/.
 Nota: Para probar los EndPoints use [Postman](https://www.postman.com/)
 
 ## 👀 Team Members
