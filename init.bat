@@ -33,3 +33,7 @@ start "Serv. Inventario" cmd /k "py services\Inventario\main.py"
 REM Ejecuta el script de inicialización del servicio de Transbank
 echo Iniciando el servicio de Transbank...
 start "Serv. Transbank" cmd /k "py services\Transbank\main.py"
+
+REM Ejecuta el script de inicialización del servicio de Frontend
+echo Iniciando el servicio de Frontend...
+start "Serv. Frontend" cmd /k "py frontend\manage.py migrate && py frontend\manage.py runserver"

@@ -14,13 +14,10 @@ Asegúrate de tener instalado lo siguiente en tu máquina:
 - [Python](https://www.python.org/) (v3.13.3 o superior)
 - [Git](https://git-scm.com/)
 
-### Revisar versiones
+### Verificar que este Instalado
 
 ```bash
 py --version
-```
-```bash
-py -m pip --version
 ```
 
 ### Pasos a seguir
@@ -29,7 +26,7 @@ Primero, abre una terminal o cmd (windows).
 * Clone el repositorio del proyecto desde GitHub.
 
 ```bash
-git clone https://github.com/Volkergz/Ferremas/tree/main
+git clone https://github.com/volkergz/ferremas.git
 ```
 
 *  Accede al directorio del proyecto clonado
@@ -43,9 +40,9 @@ cd Ferremas
 ### Correr los servicios
 Si esta en Windows, ejecute el archivo init.bat
 
-### El servicio de frontend se ejecutara en https://127.0.0.1:8000/.
+#### El servicio de frontend se ejecutara en https://127.0.0.1:8000/
 
-#### Los servicios se ejecutarán en http://127.0.0.1:500X/.
+#### Los servicios web se ejecutarán en http://127.0.0.1:500X/ (X represeta el servicio especifico)
 Nota: Para probar los EndPoints use [Postman](https://www.postman.com/)
 
 ## 👀 Team Members
