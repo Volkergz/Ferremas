@@ -58,7 +58,7 @@ def get_dollar():
             df = siete.cuadro(
                 series=["F073.TCO.PRE.Z.D"],
                 nombres=["dolar"],
-                desde=date_str,
+                desde=date_str, 
                 hasta=date_str,
             )
 

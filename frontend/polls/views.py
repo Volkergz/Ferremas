@@ -103,9 +103,11 @@ def catalogo_view(request):
 
                 # Extrae el valor del dólar de la respuesta
                 usd = res.json().get('dollar_value')
+                print(usd)
+
 
                 # Si el valor del dólar es válido, convierte los precios
-                if usd and usd > 0:
+                if usd and usd > -1:
 
                     # Convierte los precios de los productos a USD
                     items_data = response.json()
@@ -118,6 +120,7 @@ def catalogo_view(request):
                     items = items_data
                 else:
                     messages.error(request, "Tasa de cambio no válida.")
+                    items = []
     else:
         items = []
 

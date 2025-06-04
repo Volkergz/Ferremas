@@ -24,7 +24,7 @@ start "Serv. Banco Central" cmd /k "py services\BancoCentral\main.py"
 
 REM Ejecuta el script de inicialización del servicio de Compras
 echo Iniciando el servicio de Compras...
-start "Serv. Monedas" cmd /k "py services\Compras\main.py"
+start "Serv. Compras" cmd /k "py services\Compras\main.py"
 
 REM Ejecuta el script de inicialización del servicio de Compras
 echo Iniciando el servicio de Inventario...
