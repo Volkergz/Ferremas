@@ -4,3 +4,5 @@ mysql-connector-python == 9.3.0
 requests == 2.32.3
 transbank-sdk == 6.0.0
 bcchapi == 1.1.2
+pytest == 8.4.0
+pytest-mock == 3.14.1
