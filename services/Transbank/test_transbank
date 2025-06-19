@@ -1,0 +1,77 @@
+import pytest
+from unittest.mock import patch, MagicMock
+from services.Transbank.main import app  # Ajusta el path si tu archivo está en otro lugar
+
+@pytest.fixture
+def client():
+    return app.test_client()
+
+# Test para POST /crear-transaccion
+@patch("services.Transbank.main.Transaction")
+def test_crear_transaccion_exito(mock_transaction_class, client):
+    mock_tx = MagicMock()
+    mock_tx.create.return_value = {
+        "token": "token123",
+        "url": "https://webpay.test/redirect"
+    }
+    mock_transaction_class.return_value = mock_tx
+
+    payload = {
+        "id_orden": 123,
+        "id_usuario": "user_1",
+        "total": 15000
+    }
+
+    response = client.post("/crear-transaccion", json=payload)
+    assert response.status_code == 200
+    data = response.get_json()
+    assert "token" in data
+    assert "url" in data
+
+def test_crear_transaccion_faltan_datos(client):
+    # Falta id_usuario
+    payload = {
+        "id_orden": 123,
+        "total": 15000
+    }
+    response = client.post("/crear-transaccion", json=payload)
+    assert response.status_code == 400
+    assert response.get_json() == {"error": "Faltan datos requeridos"}
+
+def test_crear_transaccion_monto_negativo(client):
+    payload = {
+        "id_orden": 123,
+        "id_usuario": "user_1",
+        "total": -10
+    }
+    response = client.post("/crear-transaccion", json=payload)
+    assert response.status_code == 400
+    assert response.get_json() == {"error": "El monto debe ser un número positivo"}
+
+def test_crear_transaccion_monto_no_numero(client):
+    payload = {
+        "id_orden": 123,
+        "id_usuario": "user_1",
+        "total": "abc"
+    }
+    response = client.post("/crear-transaccion", json=payload)
+    assert response.status_code == 400
+    assert response.get_json() == {"error": "El monto debe ser un número positivo"}
+
+# Test para POST /confirmar-transaccion
+@patch("services.Transbank.main.Transaction")
+def test_confirmar_transaccion_exito(mock_transaction_class, client):
+    mock_tx = MagicMock()
+    mock_tx.commit.return_value = {
+        "status": "AUTHORIZED",
+        "buy_order": "123",
+        "amount": 15000
+    }
+    mock_transaction_class.return_value = mock_tx
+
+    payload = {"token_ws": "token123"}
+    response = client.post("/confirmar-transaccion", json=payload)
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["status"] == "AUTHORIZED"
+    assert data["buy_order"] == "123"

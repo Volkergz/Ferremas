@@ -1,0 +1,63 @@
+import pytest
+from unittest.mock import patch, MagicMock
+from services.BancoCentral.main import app
+from datetime import datetime
+
+@pytest.fixture
+def client():
+    return app.test_client()
+
+@pytest.fixture
+def today_str():
+    return datetime.today().strftime('%Y-%m-%d')
+
+@patch("services.BancoCentral.main.con")
+def test_get_dollar_from_db(mock_con, client, today_str):
+    """Dólar ya existe en la BD, no se llama a la API."""
+    mock_cursor = MagicMock()
+    mock_cursor.fetchone.return_value = {"valor": 900, "fecha": today_str}
+    mock_con.cursor.return_value = mock_cursor
+
+    response = client.get("/getDollar")
+    assert response.status_code == 200
+    assert response.get_json()["dollar_value"] == 900
+
+@patch("services.BancoCentral.main.siete")
+@patch("services.BancoCentral.main.con")
+def test_get_dollar_from_api(mock_con, mock_siete, client, today_str):
+    """Dólar no está en BD → se obtiene desde API."""
+    db_cursor = MagicMock()
+    db_cursor.fetchone.return_value = None
+    mock_con.cursor.return_value = db_cursor
+
+    df_mock = MagicMock()
+    df_mock.empty = False
+    df_mock.__getitem__.return_value.iloc.__getitem__.return_value = 925.5
+    mock_siete.cuadro.return_value = df_mock
+
+    response = client.get("/getDollar")
+    assert response.status_code == 200
+    assert response.get_json()["dollar_value"] == 925.5
+
+@patch("services.BancoCentral.main.siete")
+@patch("services.BancoCentral.main.con")
+def test_api_returns_empty(mock_con, mock_siete, client):
+    """API del BCCh no tiene datos."""
+    mock_con.cursor.return_value.fetchone.return_value = None
+
+    df_mock = MagicMock()
+    df_mock.empty = True
+    mock_siete.cuadro.return_value = df_mock
+
+    response = client.get("/getDollar")
+    assert response.status_code == 404
+    assert "error" in response.get_json()
+
+@patch("services.BancoCentral.main.con")
+def test_db_connection_fails(mock_con, client):
+    """Fallo al acceder a la base de datos."""
+    mock_con.cursor.side_effect = Exception("Falla DB")
+
+    response = client.get("/getDollar")
+    assert response.status_code == 500
+    assert "error" in response.get_json()
